@@ -1606,7 +1606,8 @@ dump_one_dir(const char *dsname, void *arg)
 	#ifdef _KERNEL
 	printk("Could not open %s, error %d\n", dsname, error);
 	#endif
-	error = dmu_objset_own(dsname, DMU_OST_ZFS, B_FALSE, FTAG, &os);
+	 error = dmu_objset_hold(dsname, FTAG, &os);
+	//error = dmu_objset_own(dsname, DMU_OST_ZFS, B_FALSE, FTAG, &os);
 	if (error) {
 		 #ifdef _KERNEL
 		 printk("Could not open %s, error %d\n", dsname, error);
@@ -1614,7 +1615,8 @@ dump_one_dir(const char *dsname, void *arg)
 		return (0);
 	}
 	dump_dir(os);
-	dmu_objset_disown(os, FTAG);
+	dmu_objset_rele(os, FTAG);
+	//dmu_objset_disown(os, FTAG);
 	return (0);
 }
 
