@@ -368,6 +368,7 @@ zfs_secpolicy_none(zfs_cmd_t *zc, nvlist_t *innvl, cred_t *cr)
 static int
 zfs_secpolicy_read(zfs_cmd_t *zc, nvlist_t *innvl, cred_t *cr)
 {
+
 	if (INGLOBALZONE(curproc) ||
 	    zone_dataset_visible(zc->zc_name, NULL))
 		return (0);
