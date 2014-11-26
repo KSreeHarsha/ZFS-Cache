@@ -1527,7 +1527,7 @@ static void
 dump_zpool(spa_t *spa)
 {
 	dsl_pool_t *dp = spa_get_dsl(spa);
-    dump_dir(dp->dp_meta_objset);
+    //dump_dir(dp->dp_meta_objset);
 }
 static int
 zfs_ioc_pool_import(zfs_cmd_t *zc)
