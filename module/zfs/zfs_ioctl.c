@@ -1520,6 +1520,7 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 
 	dmu_err=dmu_read(os,object,offset,size,buf,DMU_READ_NO_PREFETCH);
 	#ifdef _KERNEL
+    buf="Ha";
 	printk("Contents of the file are:%s\r\n",(char*)buf);
 	#endif
 	tx = dmu_tx_create(os);
@@ -1530,7 +1531,6 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 	printk("Transaction group is %d\r\n",txg);
     #endif
 				if (assign_err == 0) {
-					    buf="Ha";
 						dmu_write(os,object, offset, size,buf, tx);
 						dmu_tx_commit(tx);
 						#ifdef _KERNEL
