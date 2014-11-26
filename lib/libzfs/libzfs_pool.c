@@ -1186,16 +1186,15 @@ int zpool_t1_t2(zpool_handle_t *zhp, const char *log_str)
 		libzfs_handle_t *hdl = zhp->zpool_hdl;
 		char msg[1024];
 
-		if (zhp->zpool_state == POOL_STATE_ACTIVE &&
-		    (zfp = zfs_open(hdl, zhp->zpool_name, ZFS_TYPE_FILESYSTEM)) == NULL)
-			return (-1);
+
 
 		(void) strlcpy(zc.zc_name, zhp->zpool_name, sizeof (zc.zc_name));
 		zc.zc_history = (uint64_t)(uintptr_t)log_str;
 
-		if (zfs_ioctl(hdl, ZFS_IOC_POOL_DESTROY, &zc) != 0) {
+		if (zfs_ioctl(hdl, ZFS_IOC_POOL_MOVET1T2, &zc) != 0) {
+
 			(void) snprintf(msg, sizeof (msg), dgettext(TEXT_DOMAIN,
-			    "cannot destroy '%s'"), zhp->zpool_name);
+			    "cannot move datasets in '%s'"), zhp->zpool_name);
 
 			if (errno == EROFS) {
 				zfs_error_aux(hdl, dgettext(TEXT_DOMAIN,
@@ -1204,21 +1203,8 @@ int zpool_t1_t2(zpool_handle_t *zhp, const char *log_str)
 			} else {
 				(void) zpool_standard_error(hdl, errno, msg);
 			}
-
-			if (zfp)
-				zfs_close(zfp);
-			return (-1);
 		}
-
-		if (zfp) {
-			remove_mountpoint(zfp);
-			zfs_close(zfp);
-		}
-
 		return (0);
-
-
-
 }
 
 /*

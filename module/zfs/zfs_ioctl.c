@@ -1506,6 +1506,17 @@ zfs_ioc_pool_destroy(zfs_cmd_t *zc)
 }
 
 static int
+zfs_ioc_pool_movet1t2(zfs_cmd_t *zc)
+{
+	int error=0;
+	//error = spa_destroy(zc->zc_name);
+ 	 #ifdef _KERNEL
+	printk("Move data from tier 1 to tier 2\r\n");
+	#endif
+	return (error);
+}
+
+static int
 zfs_ioc_pool_import(zfs_cmd_t *zc)
 {
 	nvlist_t *config, *props = NULL;
@@ -5405,6 +5416,8 @@ zfs_ioctl_init(void)
 	 */
 	zfs_ioctl_register_pool(ZFS_IOC_POOL_DESTROY, zfs_ioc_pool_destroy,
 	    zfs_secpolicy_config, B_FALSE, POOL_CHECK_NONE);
+	zfs_ioctl_register_pool(ZFS_IOC_POOL_MOVET1T2, zfs_ioc_pool_movet1t2,
+		    zfs_secpolicy_config, B_FALSE, POOL_CHECK_NONE);
 	zfs_ioctl_register_pool(ZFS_IOC_POOL_EXPORT, zfs_ioc_pool_export,
 	    zfs_secpolicy_config, B_FALSE, POOL_CHECK_NONE);
 
