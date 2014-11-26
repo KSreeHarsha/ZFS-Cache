@@ -879,6 +879,7 @@ typedef enum zfs_ioc {
 	ZFS_IOC_BOOKMARK,
 	ZFS_IOC_GET_BOOKMARKS,
 	ZFS_IOC_DESTROY_BOOKMARKS,
+	ZFS_IOC_POOL_MOVET1T2,
 
 	/*
 	 * Linux - 3/64 numbers reserved.
