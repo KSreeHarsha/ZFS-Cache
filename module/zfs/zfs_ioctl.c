@@ -1509,13 +1509,26 @@ static int
 zfs_ioc_pool_movet1t2(zfs_cmd_t *zc)
 {
 	int error=0;
+	spa_t *spa;
 	//error = spa_destroy(zc->zc_name);
+	if ((spa = spa_lookup(zc->zc_name)) == NULL) {
+	#ifdef _KERNEL
+	printk("Error while retriving spa\r\n");
+	#endif
+	 }
+
  	 #ifdef _KERNEL
 	printk("Move data from tier 1 to tier 2\r\n");
 	#endif
 	return (error);
 }
 
+static void
+dump_zpool(spa_t *spa)
+{
+	dsl_pool_t *dp = spa_get_dsl(spa);
+    dump_dir(dp->dp_meta_objset);
+}
 static int
 zfs_ioc_pool_import(zfs_cmd_t *zc)
 {
