@@ -2957,9 +2957,9 @@ dump_zpool(spa_t *spa)
 				    "Pool dataset frees");
 			}
 			dump_dtl(spa->spa_root_vdev, 0);
-		}
+		}**/
 		(void) dmu_objset_find(spa_name(spa), dump_one_dir,
-		    NULL, DS_FIND_SNAPSHOTS | DS_FIND_CHILDREN);**/
+		    NULL, DS_FIND_SNAPSHOTS | DS_FIND_CHILDREN);
 	}
 	if (dump_opt['b'] || dump_opt['c'])
 		rc = dump_block_stats(spa);
