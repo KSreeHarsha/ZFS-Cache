@@ -1229,19 +1229,6 @@ zpool_do_move_t1_t2(int argc, char **argv)
 		pool = argv[0];
 
 		if ((zhp = zpool_open_canfail(g_zfs, pool)) == NULL) {
-			/*
-			 * As a special case, check for use of '/' in the name, and
-			 * direct the user to use 'zfs destroy' instead.
-			 */
-			if (strchr(pool, '/') != NULL)
-				(void) fprintf(stderr, gettext("use 'zfs destroy' to "
-				    "destroy a dataset\n"));
-			return (1);
-		}
-
-		if (zpool_disable_datasets(zhp, force) != 0) {
-			(void) fprintf(stderr, gettext("could not destroy '%s': "
-			    "could not unmount datasets\n"), zpool_get_name(zhp));
 			return (1);
 		}
 
