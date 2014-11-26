@@ -95,6 +95,8 @@ static int zpool_do_events(int, char **);
 static int zpool_do_get(int, char **);
 static int zpool_do_set(int, char **);
 
+static int zpool_do_move_t1_t2(int,char **);
+
 /*
  * These libumem hooks provide a reasonable set of defaults for the allocator's
  * debugging facilities.
@@ -139,7 +141,8 @@ typedef enum {
 	HELP_SET,
 	HELP_SPLIT,
 	HELP_REGUID,
-	HELP_REOPEN
+	HELP_REOPEN,
+	HELP_TIER
 } zpool_help_t;
 
 
@@ -193,6 +196,8 @@ static zpool_command_t command_table[] = {
 	{ NULL },
 	{ "get",	zpool_do_get,		HELP_GET		},
 	{ "set",	zpool_do_set,		HELP_SET		},
+	{ "movet1t2",	zpool_do_move_t1_t2,	HELP_TIER	},
+
 };
 
 #define	NCOMMAND	(sizeof (command_table) / sizeof (command_table[0]))
@@ -1182,6 +1187,72 @@ zpool_do_destroy(int argc, char **argv)
 	zpool_close(zhp);
 
 	return (ret);
+}
+
+
+
+int
+zpool_do_move_t1_t2(int argc, char **argv)
+{
+	boolean_t force = B_FALSE;
+		int c;
+		char *pool;
+		zpool_handle_t *zhp;
+		int ret;
+
+		/* check options */
+		while ((c = getopt(argc, argv, "f")) != -1) {
+			switch (c) {
+			case 'f':
+				force = B_TRUE;
+				break;
+			case '?':
+				(void) fprintf(stderr, gettext("invalid option '%c'\n"),
+				    optopt);
+				usage(B_FALSE);
+			}
+		}
+
+		argc -= optind;
+		argv += optind;
+
+		/* check arguments */
+		if (argc < 1) {
+			(void) fprintf(stderr, gettext("missing pool argument\n"));
+			usage(B_FALSE);
+		}
+		if (argc > 1) {
+			(void) fprintf(stderr, gettext("too many arguments\n"));
+			usage(B_FALSE);
+		}
+
+		pool = argv[0];
+
+		if ((zhp = zpool_open_canfail(g_zfs, pool)) == NULL) {
+			/*
+			 * As a special case, check for use of '/' in the name, and
+			 * direct the user to use 'zfs destroy' instead.
+			 */
+			if (strchr(pool, '/') != NULL)
+				(void) fprintf(stderr, gettext("use 'zfs destroy' to "
+				    "destroy a dataset\n"));
+			return (1);
+		}
+
+		if (zpool_disable_datasets(zhp, force) != 0) {
+			(void) fprintf(stderr, gettext("could not destroy '%s': "
+			    "could not unmount datasets\n"), zpool_get_name(zhp));
+			return (1);
+		}
+
+		/* The history must be logged as part of the export */
+		log_history = B_FALSE;
+
+		ret = (zpool_t1_t2(zhp, history_str) != 0);
+
+		zpool_close(zhp);
+
+		return (ret);
 }
 
 /*

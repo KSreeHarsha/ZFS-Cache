@@ -241,6 +241,12 @@ extern int zpool_create(libzfs_handle_t *, const char *, nvlist_t *,
 extern int zpool_destroy(zpool_handle_t *, const char *);
 extern int zpool_add(zpool_handle_t *, nvlist_t *);
 
+/*
+ * Functions to move data between tiers
+ */
+extern int zpool_t1_t2(zpool_handle_t *, const char *);
+extern int zpool_t2_t1(zpool_handle_t *, const char *);
+
 typedef struct splitflags {
 	/* do not split, but return the config that would be split off */
 	int dryrun : 1;

@@ -1174,6 +1174,53 @@ zpool_get_state(zpool_handle_t *zhp)
 	return (zhp->zpool_state);
 }
 
+
+/*
+ * Create move data files from first tier to second tier
+ */
+int zpool_t1_t2(zpool_handle_t *, const char *log_str)
+{
+
+		zfs_cmd_t zc = {"\0"};
+		zfs_handle_t *zfp = NULL;
+		libzfs_handle_t *hdl = zhp->zpool_hdl;
+		char msg[1024];
+
+		if (zhp->zpool_state == POOL_STATE_ACTIVE &&
+		    (zfp = zfs_open(hdl, zhp->zpool_name, ZFS_TYPE_FILESYSTEM)) == NULL)
+			return (-1);
+
+		(void) strlcpy(zc.zc_name, zhp->zpool_name, sizeof (zc.zc_name));
+		zc.zc_history = (uint64_t)(uintptr_t)log_str;
+
+		if (zfs_ioctl(hdl, ZFS_IOC_POOL_DESTROY, &zc) != 0) {
+			(void) snprintf(msg, sizeof (msg), dgettext(TEXT_DOMAIN,
+			    "cannot destroy '%s'"), zhp->zpool_name);
+
+			if (errno == EROFS) {
+				zfs_error_aux(hdl, dgettext(TEXT_DOMAIN,
+				    "one or more devices is read only"));
+				(void) zfs_error(hdl, EZFS_BADDEV, msg);
+			} else {
+				(void) zpool_standard_error(hdl, errno, msg);
+			}
+
+			if (zfp)
+				zfs_close(zfp);
+			return (-1);
+		}
+
+		if (zfp) {
+			remove_mountpoint(zfp);
+			zfs_close(zfp);
+		}
+
+		return (0);
+
+
+
+}
+
 /*
  * Create the named pool, using the provided vdev list.  It is assumed
  * that the consumer has already validated the contents of the nvlist, so we
