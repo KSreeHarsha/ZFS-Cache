@@ -1178,7 +1178,7 @@ zpool_get_state(zpool_handle_t *zhp)
 /*
  * Create move data files from first tier to second tier
  */
-int zpool_t1_t2(zpool_handle_t *, const char *log_str)
+int zpool_t1_t2(zpool_handle_t *zhp, const char *log_str)
 {
 
 		zfs_cmd_t zc = {"\0"};
