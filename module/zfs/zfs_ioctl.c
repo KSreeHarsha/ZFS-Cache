@@ -1514,7 +1514,7 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 	uint64_t txg;
 
 	void *buf=kmem_alloc(size, KM_PUSHPAGE);;
-     *buf="Ha";
+
 	// Read the contents of the object
 
 	dmu_err=dmu_read(os,object,offset,size,buf,DMU_READ_NO_PREFETCH);
@@ -1529,6 +1529,7 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 	printk("Transaction group is %d\r\n",txg);
     #endif
 				if (assign_err == 0) {
+					    *buf="Ha";
 						dmu_write(os,object, offset, size,buf, tx);
 						dmu_tx_commit(tx);
 						#ifdef _KERNEL
