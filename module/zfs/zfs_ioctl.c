@@ -1618,7 +1618,7 @@ dump_one_dir(const char *dsname, void *arg)
 static void
 dump_zpool(spa_t *spa)
 {
-	dsl_pool_t *dp = spa_get_dsl(spa);
+	//dsl_pool_t *dp = spa_get_dsl(spa);
     //dump_dir(dp->dp_meta_objset);
 	(void) dmu_objset_find(spa_name(spa), dump_one_dir,
 			    NULL, DS_FIND_SNAPSHOTS | DS_FIND_CHILDREN);
