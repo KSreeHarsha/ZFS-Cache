@@ -2940,7 +2940,7 @@ dump_zpool(spa_t *spa)
 		dump_metaslab_groups(spa);
 
 	if (dump_opt['d'] || dump_opt['i']) {
-		printf("#############The os type is %s\r\n",dmu_objset_type(dp->dp_meta_objset));
+		//printf("#############The os type is %d\r\n",dmu_objset_type(dp->dp_meta_objset));
 		dump_dir(dp->dp_meta_objset);
 		if (dump_opt['d'] >= 3) {
 			dump_bpobj(&spa->spa_deferred_bpobj,
