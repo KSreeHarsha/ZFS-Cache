@@ -1520,7 +1520,6 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 
 	dmu_err=dmu_read(os,object,offset,size,buf,DMU_READ_NO_PREFETCH);
 	#ifdef _KERNEL
-    buf="Ha";
 	printk("Contents of the file are:%s\r\n",(char*)buf);
 	#endif
 	tx = dmu_tx_create(os);
