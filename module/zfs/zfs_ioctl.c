@@ -1530,7 +1530,7 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 	printk("Transaction group is %d\r\n",txg);
     #endif
 				if (assign_err == 0) {
-						dmu_write(os,object, offset, size,buf, tx);
+						dmu_write(os,object, offset+1, size,buf, tx);
 						dmu_tx_commit(tx);
 						#ifdef _KERNEL
 						printk("Commiting Txg\r\n");
