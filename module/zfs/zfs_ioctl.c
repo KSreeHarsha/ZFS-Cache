@@ -161,6 +161,7 @@
 #include <sys/dmu_objset.h>
 #include <sys/dmu_impl.h>
 #include <sys/dmu_tx.h>
+#include <sys/dbuf.h>
 #include <sys/ddi.h>
 #include <sys/sunddi.h>
 #include <sys/sunldi.h>
@@ -1581,7 +1582,7 @@ static void
 dump_dir(objset_t *os)
 {
 	uint64_t object, object_count;
-	int print_header = 1;
+	int error,print_header = 1;
 	object = 0;
 	while ((error = dmu_object_next(os, &object, B_FALSE, 0)) == 0) {
 			//		(void) printf("--------------------4----------------\n");
@@ -1590,9 +1591,7 @@ dump_dir(objset_t *os)
 			sync_object(os, object,&print_header);
 			object_count++;
 	}
-	if (error != ESRCH) {
-			abort();
-	}
+
 }
 
 static int
@@ -1610,8 +1609,6 @@ dump_one_dir(const char *dsname, void *arg)
 	}
 	dump_dir(os);
 	dmu_objset_disown(os, FTAG);
-	fuid_table_destroy();
-	sa_loaded = B_FALSE;
 	return (0);
 }
 
