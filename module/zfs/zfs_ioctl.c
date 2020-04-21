@@ -1530,7 +1530,7 @@ void dmu_read_write(objset_t *os, uint64_t object,uint64_t offset,uint64_t size)
 	printk("Transaction group is %d\r\n",txg);
     #endif
 				if (assign_err == 0) {
-						dmu_write(os,object, offset+1, size,buf, tx);
+						dmu_write(os,object, offset, size,buf, tx);
 						dmu_tx_commit(tx);
 						#ifdef _KERNEL
 						printk("Commiting Txg\r\n");
@@ -1607,7 +1607,6 @@ dump_one_dir(const char *dsname, void *arg)
 	printk("Could not open %s, error %d\n", dsname, error);
 	#endif
 	 error = dmu_objset_hold(dsname, FTAG, &os);
-	//error = dmu_objset_own(dsname, DMU_OST_ZFS, B_FALSE, FTAG, &os);
 	if (error) {
 		 #ifdef _KERNEL
 		 printk("Could not open %s, error %d\n", dsname, error);
@@ -1616,7 +1615,6 @@ dump_one_dir(const char *dsname, void *arg)
 	}
 	dump_dir(os);
 	dmu_objset_rele(os, FTAG);
-	//dmu_objset_disown(os, FTAG);
 	return (0);
 }
 
