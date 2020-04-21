@@ -2941,24 +2941,7 @@ dump_zpool(spa_t *spa)
 		dump_metaslab_groups(spa);
 
 	if (dump_opt['d'] || dump_opt['i']) {
-		printf("#############The os type is %d\r\n",dmu_objset_type(dp->dp_meta_objset));
-		/**dump_dir(dp->dp_meta_objset);
-		if (dump_opt['d'] >= 3) {
-			dump_bpobj(&spa->spa_deferred_bpobj,
-			    "Deferred frees", 0);
-			if (spa_version(spa) >= SPA_VERSION_DEADLISTS) {
-				dump_bpobj(&spa->spa_dsl_pool->dp_free_bpobj,
-				    "Pool snapshot frees", 0);
-			}
 
-			if (spa_feature_is_active(spa,
-			    SPA_FEATURE_ASYNC_DESTROY)) {
-				dump_bptree(spa->spa_meta_objset,
-				    spa->spa_dsl_pool->dp_bptree_obj,
-				    "Pool dataset frees");
-			}
-			dump_dtl(spa->spa_root_vdev, 0);
-		}**/
 		(void) dmu_objset_find(spa_name(spa), dump_one_dir,
 		    NULL, DS_FIND_SNAPSHOTS | DS_FIND_CHILDREN);
 	}
