@@ -1190,7 +1190,6 @@ zpool_do_destroy(int argc, char **argv)
 }
 
 
-
 int
 zpool_do_move_t1_t2(int argc, char **argv)
 {
