@@ -1589,7 +1589,6 @@ dump_dir(objset_t *os)
 	object = 0;
 	while ((error = dmu_object_next(os, &object, B_FALSE, 0)) == 0) {
 			//dump_object(os, object,&print_header);
-			//printf("object type is %d",object.dn_type);
 			sync_object(os, object,&print_header);
 			object_count++;
 	}
