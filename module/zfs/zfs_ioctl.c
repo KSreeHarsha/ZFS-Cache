@@ -1588,9 +1588,7 @@ dump_dir(objset_t *os)
 	int error,print_header = 1;
 	object = 0;
 	while ((error = dmu_object_next(os, &object, B_FALSE, 0)) == 0) {
-			//		(void) printf("--------------------4----------------\n");
 			//dump_object(os, object,&print_header);
-			//printf("object type is %d",object.dn_type);
 			sync_object(os, object,&print_header);
 			object_count++;
 	}
@@ -1622,7 +1620,7 @@ static void
 dump_zpool(spa_t *spa)
 {
 	//dsl_pool_t *dp = spa_get_dsl(spa);
-    //dump_dir(dp->dp_meta_objset);
+    	//dump_dir(dp->dp_meta_objset);
 	(void) dmu_objset_find(spa_name(spa), dump_one_dir,
 			    NULL, DS_FIND_SNAPSHOTS | DS_FIND_CHILDREN);
 }
@@ -1632,7 +1630,6 @@ zfs_ioc_pool_movet1t2(zfs_cmd_t *zc)
 {
 	int error=0;
 	spa_t *spa;
-	//error = spa_destroy(zc->zc_name);
 	if ((spa = spa_lookup(zc->zc_name)) == NULL) {
 	#ifdef _KERNEL
 	printk("Error while retriving spa\r\n");
